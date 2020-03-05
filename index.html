@@ -3,18 +3,17 @@
 <head>
 <meta charset="utf-8">
 <title>すごろくゲーム</title>
-
 <!-- style sheet -->
 <link href="css/style.css" rel="stylesheet">
 </head>
 <body>
-
-<p>すごろくゲーム</p>
-<input class="diceBtn" value="サイコロを振る" onclick="OnButtonClick();"/>
-<br>
-<br>
-<div id="output"></div>
-
+<h3>すごろくゲーム</h3>
+<div class="diceForm">
+<ul>
+<li><input class="diceBtn" value="サイコロを振る" onclick="OnButtonClick();"/></li>
+<li><div id="output"></div></li>
+</ul>
+</div>
 
 <canvas id="myCanvas" width="1800" height="320"></canvas>
 
