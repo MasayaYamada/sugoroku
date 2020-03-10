@@ -1,7 +1,7 @@
 phina.globalize();
 
-const screenWidth = 960;
-const screenheight = 480;
+const screenWidth = 900;
+const screenheight = 380;
 
 phina.define("MainScene", {  
   // 継承  
@@ -19,13 +19,11 @@ phina.define("MainScene", {
     //パラメータ
     var dice;　　　　　// サイコロ
     // var progressVal；// 進行度
-     var leftVal = 0;     // 残りコマ数
+     var leftVal = 100;     // 残りコマ数
     // var stopVal;     // 停止位置
     // var goalVal;     // ゴール値
     // var goalStatus;  // ゴールステータス
     // var eventVal;    // イベント値
-
-    var total = 100;
 
     // 背景色 
     this.backgroundColor = '#cccccc';
@@ -49,7 +47,8 @@ phina.define("MainScene", {
     var diceLabel = Label({x:380,y:50,fill:'black',text:cnt}).addChildTo(this);
     var leftValLabel = Label({x:380,y:150,fill:'black',text:cnt}).addChildTo(this);
     var leftLavel = Label({x:200,y:150,fill:'black',text:cnt}).addChildTo(this);
-    leftLavel.text = "残りのコマ："
+    leftLavel.text = "残りのコマ：";
+    leftValLabel.text = leftVal;
 
     button.onpointend = function(){
       // ボタンが押されたときの処理
@@ -57,17 +56,19 @@ phina.define("MainScene", {
       dice = Math.floor(Math.random() * 6) + 1 ;
       diceLabel.text = dice;
 
-      if (leftVal == 0) {
-        leftVal = total - dice;
-      } else {
-        leftVal = leftVal - dice;
-      }
+      // 残りマスの表示
+      leftVal = leftVal - dice;
       leftValLabel.text = leftVal
+
+      // コマの動く動作
+
+
+　　　// あがり判定
+     if (leftVal <= 0){
+     	alert("あがりました。終了します。");
+		location.reload();
+     }
     };
-
-    
-
-
 
   },  
 }); 
