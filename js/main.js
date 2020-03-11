@@ -14,6 +14,10 @@ var leftVal = 0;     // 残りコマ数
 var total = 100;　//コマ数
 var redSquareFlag = false;
 
+// コマ画像の読み込み
+var frameImg = {image: {'koma': 'img/koma.png',},};
+
+
 phina.define("MainScene", {  
   // 継承  
   superClass: 'DisplayScene',  
@@ -73,7 +77,7 @@ phina.define("MainScene", {
       }
     };
 
-    //スタートコマの描写
+    //スタートマスの描写
     var start = CircleShape({
         fill: 'yellow',
         radius: 30,
@@ -81,9 +85,8 @@ phina.define("MainScene", {
         y:450
     }).addChildTo(this);
 
-
-      // マスの描写
-      for (var i = 2; i <= total; i++) {
+    // マスの描写
+    for (var i = 2; i <= total; i++) {
 
       var xposition = i * 100;
 
@@ -103,11 +106,13 @@ phina.define("MainScene", {
            y:450
         }).addChildTo(this);
       }
+
       }
 
-      //コマの描写
-      var frameImg = {image: {'framePoint': 'img/koma,png'}};
-      var point = Sprite({'framePoint', x:xposition + 30, y:450}).addChildTo(this);
+    // コマの描写
+    var koma = Sprite('koma').addChildTo(this).setPosition(100, 380);
+    koma.width = 50;
+    koma.height = 70;
 
 
   },  
@@ -120,10 +125,12 @@ phina.main(function() {
   // アプリケーションを生成  
   let app = GameApp({  
     // MainScene から開始  
-    startLabel: 'main',  
+    startLabel: 'main', 
+    assets: frameImg, 
     // 画面サイズ  
     width: screenWidth,  
     height: screenheight,  
-  }); 
+  });
+   
   app.run();  
 });  
