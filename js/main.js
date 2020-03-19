@@ -47,7 +47,7 @@ phina.define('MainScene', {
             strokeWidth: 5, // 枠太さ
         }).addChildTo(this);
 
-
+        //ラベル類の初期値
         var cnt = 0;
         var diceLabel = Label({ x: 380, y: 50, fill: 'black', text: cnt }).addChildTo(this);
         var leftValLabel = Label({ x: 380, y: 100, fill: 'black', text: cnt }).addChildTo(this);
@@ -55,7 +55,7 @@ phina.define('MainScene', {
         leftLavel.text = "残りのコマ：";
         leftValLabel.text = total;
 
-
+        // ボタンの描写
         button.onpointend = function() {
             // ボタンが押されたときの処理
             // ランダム値を出力
@@ -72,12 +72,21 @@ phina.define('MainScene', {
             }
         };
 
-        (1000).times(function(i) {
+        //コマの描写
+
+
+        // マスの描写
+        (100).times(function(i) {
             //マップをMainSceneに追加
-            if (i % 5 == 0) {
+            if (i == 0) {
+                map[i] = CircleShape({ fill: 'yellow', radius: 30 }).addChildTo(this);
+                console.log(i);
+            } else if (i % 5 == 0) {
                 map[i] = CircleShape({ fill: 'red', radius: 30 }).addChildTo(this);
+                console.log(i);
             } else {
                 map[i] = CircleShape({ fill: 'white', radius: 30 }).addChildTo(this);
+                console.log(i)
             }
             //基準点を左上にする
             map[i].setOrigin(0, 0);
@@ -95,11 +104,17 @@ phina.define('MainScene', {
     // update時の処理
     update: function() {
 
+        // サイコロを振ったあとの、マスとコマの動き
         if (btnPushFlag == true) {
 
-            (10).times(function(i) {
+            // TODO: サイコロの目の値を取得
+
+            // TODO: サイコロの目分、コマを動かす	
+
+            // TODO：サイコロの目分マスを動かす
+            (100).times(function(i) {
                 //マップをスクロール
-                map[i].x -= 5;
+                map[i].x -= 300;
             });
             btnPushFlag = false;
         }
