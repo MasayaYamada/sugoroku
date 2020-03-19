@@ -76,13 +76,16 @@ phina.define('MainScene', {
 
 
         // マスの描写
-        (100).times(function(i) {
+        (101).times(function(i) {
             //マップをMainSceneに追加
             if (i == 0) {
                 map[i] = CircleShape({ fill: 'yellow', radius: 30 }).addChildTo(this);
                 console.log(i);
-            } else if (i % 5 == 0) {
+            } else if (i % 5 == 0 && i != 100) {
                 map[i] = CircleShape({ fill: 'red', radius: 30 }).addChildTo(this);
+                console.log(i);
+            } else if (i == 100) {
+            	map[i] = CircleShape({ fill: 'lightgreen', radius: 30 }).addChildTo(this);
                 console.log(i);
             } else {
                 map[i] = CircleShape({ fill: 'white', radius: 30 }).addChildTo(this);
@@ -94,9 +97,9 @@ phina.define('MainScene', {
             map[i].setPosition(i * 100, 360);
         }, this);
 
-        if (btnPushFlag == true) {
-            update();
-        }
+        // if (btnPushFlag == true) {
+        //     update();
+        // }
 
 
     },
@@ -112,9 +115,9 @@ phina.define('MainScene', {
             // TODO: サイコロの目分、コマを動かす	
 
             // TODO：サイコロの目分マスを動かす
-            (100).times(function(i) {
+            (101).times(function(i) {
                 //マップをスクロール
-                map[i].x -= 300;
+                map[i].x -= 500;
             });
             btnPushFlag = false;
         }
