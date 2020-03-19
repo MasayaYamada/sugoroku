@@ -1,7 +1,7 @@
 //phina.jsをグローバルに展開
 phina.globalize();
 
-const screenWidth = 860;
+const screenWidth = 880;
 const screenheight = 500;
 
 //アセット
@@ -13,11 +13,15 @@ var ASSETS = {
 
 //どこからでも参照できるようにする
 var map = []; //マップを格納する配列
+var event = []; //イベントを有無を格納する配列
+var goal = []; //ゴールの有無を格納する配列
 var floorLen = 0; //地面の長さ
 var leftVal = 100; //残りコマ数表示
 var total = 100; //コマ数
 var dice;
 var btnPushFlag = false;
+var koma;
+var goalFlg = false;
 
 //MainSceneを定義
 phina.define('MainScene', {
@@ -64,43 +68,51 @@ phina.define('MainScene', {
             leftVal = leftVal - dice;
             leftValLabel.text = leftVal;
             btnPushFlag = true;
-
-            if (leftVal <= 0) {
-                window.alert('あがりました。ゲームを終了します');
-                location.reload();
-                return false;
-            }
         };
 
         //コマの描写
-
+        koma = Sprite('koma').addChildTo(this).setPosition(40, 330);
+        koma.width = 50;
+        koma.height = 70;
 
         // マスの描写
         (101).times(function(i) {
+
             //マップをMainSceneに追加
             if (i == 0) {
                 map[i] = CircleShape({ fill: 'yellow', radius: 30 }).addChildTo(this);
-                console.log(i);
+                event[i] = i;
+                goal[i] = i;
+                // console.log(map[i]);
+                console.log(event[i]);
+                console.log(goal[i]);
             } else if (i % 5 == 0 && i != 100) {
                 map[i] = CircleShape({ fill: 'red', radius: 30 }).addChildTo(this);
-                console.log(i);
+                event[i] = i;
+                goal[i] = i;
+                // console.log(map[i]);
+                console.log(event[i]);
+                console.log(goal[i]);
             } else if (i == 100) {
             	map[i] = CircleShape({ fill: 'lightgreen', radius: 30 }).addChildTo(this);
-                console.log(i);
+                event[i] = i;
+                goal[i] = i;
+                // console.log(map[i]);
+                console.log(event[i]);
+                console.log(goal[i]);
             } else {
                 map[i] = CircleShape({ fill: 'white', radius: 30 }).addChildTo(this);
-                console.log(i)
+                event[i] = i;
+                goal[i] = i;
+                // console.log(map[i]);
+                console.log(event[i]);
+                console.log(goal[i]);
             }
             //基準点を左上にする
             map[i].setOrigin(0, 0);
             //位置をセット
             map[i].setPosition(i * 100, 360);
         }, this);
-
-        // if (btnPushFlag == true) {
-        //     update();
-        // }
-
 
     },
 
@@ -111,14 +123,32 @@ phina.define('MainScene', {
         if (btnPushFlag == true) {
 
             // TODO: サイコロの目の値を取得
+            // var resultDice = dice;
 
-            // TODO: サイコロの目分、コマを動かす	
+            // TODO: サイコロの目分、コマを動かす
+            koma.x +=  dice * 100;
+
+            // if (koma.x >= 800){
+            //     koma.x -= 400*dice;
+            // }
 
             // TODO：サイコロの目分マスを動かす
-            (101).times(function(i) {
+            if (koma.x > 800) {
+                (101).times(function(i) {
                 //マップをスクロール
-                map[i].x -= 500;
+                map[i].x -= 800;
+                event[i] -= 8;
+                goal[i] -= 8;
+                console.log(map[i].x);
             });
+                koma.x -= 800;
+            }
+
+            if(event[100] < 1 && goal[100] < 1){
+                koma.x = dice;
+                window.alert('あがりました。ゲームを終了します');
+                this.exit();
+            }
             btnPushFlag = false;
         }
     }
@@ -129,10 +159,10 @@ phina.main(function() {
     // アプリケーションを生成
     var app = GameApp({
         // startLabel: 'splash',//splashから開始
-        title: 'アクションゲーム', //タイトル
+        title: 'すごろくゲーム', //タイトル
         backgroundColor: '#42a5f5', //背景色
 
-        // fps: 30,//fps
+        fps: 20,//fps
         assets: ASSETS, //アセット
         width: screenWidth,
         height: screenheight,
