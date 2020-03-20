@@ -1,7 +1,7 @@
 //phina.jsをグローバルに展開
 phina.globalize();
 
-const screenWidth = 880;
+const screenWidth = 1000;
 const screenheight = 500;
 
 //アセット
@@ -70,8 +70,21 @@ phina.define('MainScene', {
             btnPushFlag = true;
         };
 
+
+        var scrollLayer = DisplayElement({
+            width: 2000,
+            height: 880,
+            x: 30,
+            y: 20,
+        });
+
+        // スクロールできるようにする
+        scrollLayer.scrollable = Scrollable().attachTo(scrollLayer).setScrollType('x');
+        // scrollLayer を 追加
+        scrollLayer.addChildTo(this);
+
         //コマの描写
-        koma = Sprite('koma').addChildTo(this).setPosition(40, 330);
+        koma = Sprite('koma').addChildTo(scrollLayer).setPosition(40, 330);
         koma.width = 50;
         koma.height = 70;
 
@@ -94,7 +107,7 @@ phina.define('MainScene', {
                 console.log(event[i]);
                 console.log(goal[i]);
             } else if (i == 100) {
-            	map[i] = CircleShape({ fill: 'lightgreen', radius: 30 }).addChildTo(this);
+                map[i] = CircleShape({ fill: 'lightgreen', radius: 30 }).addChildTo(this);
                 event[i] = i;
                 goal[i] = i;
                 // console.log(map[i]);
@@ -112,8 +125,7 @@ phina.define('MainScene', {
             map[i].setOrigin(0, 0);
             //位置をセット
             map[i].setPosition(i * 100, 360);
-        }, this);
-
+        }, scrollLayer);
     },
 
     // update時の処理
@@ -126,25 +138,26 @@ phina.define('MainScene', {
             // var resultDice = dice;
 
             // TODO: サイコロの目分、コマを動かす
-            koma.x +=  dice * 100;
+            koma.x += dice * 100;
+            console.log(koma.x);
 
             // if (koma.x >= 800){
             //     koma.x -= 400*dice;
             // }
 
             // TODO：サイコロの目分マスを動かす
-            if (koma.x > 800) {
-                (101).times(function(i) {
-                //マップをスクロール
-                map[i].x -= 800;
-                event[i] -= 8;
-                goal[i] -= 8;
-                console.log(map[i].x);
-            });
-                koma.x -= 800;
-            }
+            // if (koma.x > 800) {
+            //     (101).times(function(i) {
+            //         //マップをスクロール
+            //         map[i].x -= 800;
+            //         event[i] -= 8;
+            //         goal[i] -= 8;
+            //         console.log(map[i].x);
+            //     });
+            //     koma.x -= 800;
+            // }
 
-            if(event[100] < 1 && goal[100] < 1){
+            if (leftVal <= 0) {
                 koma.x = dice;
                 window.alert('あがりました。ゲームを終了します');
                 this.exit();
@@ -162,7 +175,7 @@ phina.main(function() {
         title: 'すごろくゲーム', //タイトル
         backgroundColor: '#42a5f5', //背景色
 
-        fps: 20,//fps
+        fps: 20, //fps
         assets: ASSETS, //アセット
         width: screenWidth,
         height: screenheight,
