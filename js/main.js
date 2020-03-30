@@ -11,17 +11,22 @@ var ASSETS = {
     },
 };
 
-//どこからでも参照できるようにする
+//グローバル変数
 var map = []; //マップを格納する配列
 var event = []; //イベントを有無を格納する配列
-var goal = []; //ゴールの有無を格納する配列
-var floorLen = 0; //地面の長さ
 var leftVal = 100; //残りコマ数表示
 var total = 100; //コマ数
 var dice;
 var btnPushFlag = false;
 var koma;
 var goalFlg = false;
+var progressVal = 0; // コマの論理位置
+
+//ラベル系
+var diceLabel;
+var leftValLabel;
+var leftLavel;
+var eventLabels = ["進む", "戻る"];
 
 //MainSceneを定義
 phina.define('MainScene', {
@@ -35,7 +40,6 @@ phina.define('MainScene', {
             width: screenWidth,
             height: screenheight,
         });
-
 
         var button = Button({
             x: 200, // x座標
@@ -52,10 +56,9 @@ phina.define('MainScene', {
         }).addChildTo(this);
 
         //ラベル類の初期値
-        var cnt = 0;
-        var diceLabel = Label({ x: 380, y: 50, fill: 'black', text: cnt }).addChildTo(this);
-        var leftValLabel = Label({ x: 380, y: 100, fill: 'black', text: cnt }).addChildTo(this);
-        var leftLavel = Label({ x: 200, y: 100, fill: 'black', text: leftVal }).addChildTo(this);
+        diceLabel = Label({ x: 380, y: 50, fill: 'black', text: 0 }).addChildTo(this);
+        leftValLabel = Label({ x: 380, y: 100, fill: 'black', text: 0 }).addChildTo(this);
+        leftLavel = Label({ x: 200, y: 100, fill: 'black', text: leftVal }).addChildTo(this);
         leftLavel.text = "残りのコマ：";
         leftValLabel.text = total;
 
@@ -65,12 +68,10 @@ phina.define('MainScene', {
             // ランダム値を出力
             dice = Math.floor(Math.random() * 6) + 1;
             diceLabel.text = dice;
-            leftVal = leftVal - dice;
-            leftValLabel.text = leftVal;
             btnPushFlag = true;
         };
 
-
+        //スクロールの挙動域設定
         var scrollLayer = DisplayElement({
             width: 2000,
             height: 880,
@@ -80,7 +81,7 @@ phina.define('MainScene', {
 
         // スクロールできるようにする
         scrollLayer.scrollable = Scrollable().attachTo(scrollLayer).setScrollType('x');
-        // scrollLayer を 追加
+        // scrollLayer を追加
         scrollLayer.addChildTo(this);
 
         //コマの描写
@@ -90,42 +91,34 @@ phina.define('MainScene', {
 
         // マスの描写
         (101).times(function(i) {
-
             //マップをMainSceneに追加
             if (i == 0) {
                 map[i] = CircleShape({ fill: 'yellow', radius: 30 }).addChildTo(this);
-                event[i] = i;
-                goal[i] = i;
+                event[i] = false;
                 // console.log(map[i]);
                 console.log(event[i]);
-                console.log(goal[i]);
             } else if (i % 5 == 0 && i != 100) {
                 map[i] = CircleShape({ fill: 'red', radius: 30 }).addChildTo(this);
-                event[i] = i;
-                goal[i] = i;
+                event[i] = true;
                 // console.log(map[i]);
                 console.log(event[i]);
-                console.log(goal[i]);
             } else if (i == 100) {
                 map[i] = CircleShape({ fill: 'lightgreen', radius: 30 }).addChildTo(this);
-                event[i] = i;
-                goal[i] = i;
+                event[i] == false;
                 // console.log(map[i]);
                 console.log(event[i]);
-                console.log(goal[i]);
             } else {
                 map[i] = CircleShape({ fill: 'white', radius: 30 }).addChildTo(this);
-                event[i] = i;
-                goal[i] = i;
+                event[i] == false;
                 // console.log(map[i]);
                 console.log(event[i]);
-                console.log(goal[i]);
             }
             //基準点を左上にする
             map[i].setOrigin(0, 0);
             //位置をセット
             map[i].setPosition(i * 100, 360);
         }, scrollLayer);
+
     },
 
     // update時の処理
@@ -134,38 +127,35 @@ phina.define('MainScene', {
         // サイコロを振ったあとの、マスとコマの動き
         if (btnPushFlag == true) {
 
-            // TODO: サイコロの目の値を取得
-            // var resultDice = dice;
+            // テキスト表示変更
+            leftVal = leftVal - dice;
+            leftValLabel.text = leftVal;
 
-            // TODO: サイコロの目分、コマを動かす
-            koma.x += dice * 100;
+            // サイコロの目分、コマを動かす
+            koma.x += dice * 100;  // 表示位置
+            progressVal += dice * 100;//論理位置
+
             console.log(koma.x);
+            console.log(progressVal);
 
-            // if (koma.x >= 800){
-            //     koma.x -= 400*dice;
-            // }
+            if (progressVal % 500 == 0){
+                // Label({ x: 600, y: 200, fill: 'black', text: eventLabels[0] }).addChildTo(this);
 
-            // TODO：サイコロの目分マスを動かす
-            // if (koma.x > 800) {
-            //     (101).times(function(i) {
-            //         //マップをスクロール
-            //         map[i].x -= 800;
-            //         event[i] -= 8;
-            //         goal[i] -= 8;
-            //         console.log(map[i].x);
-            //     });
-            //     koma.x -= 800;
-            // }
 
-            if (leftVal <= 0) {
-                koma.x = dice;
+            }
+
+            if (progressVal >= 10100) {
                 window.alert('あがりました。ゲームを終了します');
                 this.exit();
             }
             btnPushFlag = false;
         }
     }
+
+
 });
+
+
 
 //メイン処理
 phina.main(function() {
