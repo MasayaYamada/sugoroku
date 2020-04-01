@@ -27,6 +27,8 @@ var diceLabel;
 var leftValLabel;
 var leftLavel;
 var eventLabels = ["進む", "戻る"];
+// var eventDiceLabel;
+// var eventProceLabel;
 
 //MainSceneを定義
 phina.define('MainScene', {
@@ -119,43 +121,80 @@ phina.define('MainScene', {
             map[i].setPosition(i * 100, 360);
         }, scrollLayer);
 
+        // this.update = function(app) {
+        //     if (btnPushFlag == true) {
+        //         // テキスト表示変更
+        //         leftVal = leftVal - dice;
+        //         leftValLabel.text = leftVal;
+
+        //         // サイコロの目分、コマを動かす
+        //         koma.x += dice * 100; // 表示位置
+        //         progressVal += dice * 100; //論理位置
+
+        //         btnPushFlag = false;
+        //     }
+        // };
+
+        // if (progressVal % 500 == 0 && progressVal != 0) {
+        //     this.update = function(app) {
+        //         var ramd = Math.floor(Math.random() * 2);
+        //         var ramdDice = Math.floor(Math.random() * 6) + 1;
+        //         if (ramd == 1) {
+        //             console.log(ramd);
+        //             koma.x -= ramdDice * 100;
+        //             progressVal -= ramdDice * 100;
+        //             Label({ x: 550, y: 200, fill: 'black', text: ramdDice }).addChildTo(this);
+        //             Label({ x: 600, y: 200, fill: 'black', text: eventLabels[ramd] }).addChildTo(this);
+        //         } else {
+        //             koma.x += ramdDice * 100;
+        //             progressVal += ramdDice * 100;
+        //             Label({ x: 550, y: 200, fill: 'black', text: ramdDice }).addChildTo(this);
+        //             Label({ x: 600, y: 200, fill: 'black', text: eventLabels[ramd] }).addChildTo(this);
+        //         }
+        //     };
+        // }
+
     },
 
     // update時の処理
     update: function() {
 
+        var eventDiceLabel; 
+        var eventProceLabel;
+
         // サイコロを振ったあとの、マスとコマの動き
         if (btnPushFlag == true) {
-
             // テキスト表示変更
             leftVal = leftVal - dice;
             leftValLabel.text = leftVal;
 
             // サイコロの目分、コマを動かす
-            koma.x += dice * 100;  // 表示位置
-            progressVal += dice * 100;//論理位置
+            koma.x += dice * 100; // 表示位置
+            progressVal += dice * 100; //論理位置
 
             console.log(koma.x);
             console.log(progressVal);
 
-            if (progressVal % 500 == 0){
-                // Label({ x: 600, y: 200, fill: 'black', text: eventLabels[0] }).addChildTo(this);
+            if (progressVal % 500 == 0) {
+                var ramd = Math.floor(Math.random() * 2);
+                var ramdDice = Math.floor(Math.random() * 6) + 1;
+                if (ramd == 1) {
+                    eventDiceLabel = Label({ x: 550, y: 200, fill: 'black', text: ramdDice }).addChildTo(this);
+                    eventProceLabel = Label({ x: 600, y: 200, fill: 'black', text: eventLabels[ramd] }).addChildTo(this);
+                    koma.x -= ramdDice * 100;
+                    progressVal -= ramdDice * 100;
 
-
+                } else {
+                    eventDiceLabel = Label({ x: 550, y: 200, fill: 'black', text: ramdDice }).addChildTo(this);
+                    eventProceLabel = Label({ x: 600, y: 200, fill: 'black', text: eventLabels[ramd] }).addChildTo(this);
+                    koma.x += ramdDice * 100;
+                    progressVal += ramdDice * 100;
+                }
             }
-
-            if (progressVal >= 10100) {
-                window.alert('あがりました。ゲームを終了します');
-                this.exit();
-            }
-            btnPushFlag = false;
         }
+        btnPushFlag = false;
     }
-
-
 });
-
-
 
 //メイン処理
 phina.main(function() {
